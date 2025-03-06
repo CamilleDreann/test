@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swipe Tinder Like</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    <style>
+        #cardContainer {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.3s ease-out;
+            padding-bottom: 20px;
+        }
+
+        .card:nth-child(1) { background-image: url('plas.jpg'); }
+        .card:nth-child(2) { background-image: url('Sans titre.jpg'); }
+        .card:nth-child(3) { background-image: url('images.jpg'); }
+
+        .card-text {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cardContainer">
+        <div class="card"><div class="card-text">plastique</div></div>
+        <div class="card"><div class="card-text">verre</div></div>
+        <div class="card"><div class="card-text">Pomme</div></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let container = document.getElementById("cardContainer");
+            let cards = document.querySelectorAll(".card");
+
+            cards.forEach((card) => {
+                let hammer = new Hammer(card);
+
+                hammer.on("pan", (event) => {
+                    card.style.transform = `translateX(${event.deltaX}px) rotate(${event.deltaX * 0.1}deg)`;
+                });
+
+                hammer.on("panend", (event) => {
+                    let moveOutWidth = document.body.clientWidth;
+
+                    if (Math.abs(event.deltaX) > 150) {
+                        let direction = event.deltaX > 0 ? moveOutWidth : -moveOutWidth;
+                        card.style.transition = "transform 0.3s ease-out";
+                        card.style.transform = `translateX(${direction}px) rotate(${event.deltaX * 0.1}deg)`;
+
+                        setTimeout(() => {
+                            if (event.deltaX > 0) {
+                                alert("❌ Perdu !");
+                            } else {
+                                alert("✅ Gagné !");
+                            }
+                            card.remove();
+                        }, 300);
+                    } else {
+                        card.style.transition = "transform 0.3s ease-out";
+                        card.style.transform = "translateX(0) rotate(0)";
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
